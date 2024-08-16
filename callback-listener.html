@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>OAuth Callback Listener</title>
+    </head>
+    <body>
+        <h1>OAuth Callback Listener</h1>
+        <div id="message"></div>
+        <button id="openSender">Open Sender</button>
+
+        <script>
+    window.addEventListener('message', function(event) {
+        console.log('Message event received');
+        const trustedOrigin = 'http://dev.local:3000';
+
+        if (event.origin !== trustedOrigin) {
+            console.warn('Received message from untrusted origin:', event.origin);
+            return;
+        }
+
+        if (event.data && event.data.type === 'test-message') {
+            document.getElementById('message').innerText = 'Callback Message: ' + event.data.content;
+            console.log('Received callback message:', event.data.content);
+        } else {
+            console.log('Received unexpected message:', event.data);
+        }
+    }, true);
+
+    document.getElementById('openSender').addEventListener('click', function() {
+        window.open('http://dev.local:3000/test-sender.html', '_blank', 'width=400,height=400');
+    });
+    </script>
+    </body>
+</html>
